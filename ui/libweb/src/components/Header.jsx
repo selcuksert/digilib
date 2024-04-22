@@ -1,4 +1,6 @@
 import classes from '../styles/Header.module.css';
+import {NavLink} from "react-router-dom";
+import PropTypes from "prop-types";
 
 export default function Header({headerBrandText}) {
     return (
@@ -6,7 +8,8 @@ export default function Header({headerBrandText}) {
             <div className="container-fluid">
                 <a className="navbar-brand" href="/">
                     <img src="/library.svg" alt="Logo" width="30" height="24"
-                         className="d-inline-block align-text-top"/><span className={classes.navbarTxt}>{headerBrandText}</span></a>
+                         className="d-inline-block align-text-top"/><span
+                    className={classes.navbarTxt}>{headerBrandText}</span></a>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
@@ -14,20 +17,32 @@ export default function Header({headerBrandText}) {
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li className="nav-item">
-                            <a className="nav-link active" aria-current="page" href="/">My Library</a>
+                            <NavLink className={({isActive}) =>
+                                isActive ? "nav-link active" : "nav-link"}
+                                     aria-current="page" to={`/`}>My Library</NavLink>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="/add">Add Book</a>
+                            <NavLink className={({isActive}) =>
+                                isActive ? "nav-link active" : "nav-link"}
+                                     aria-current="page" to={`/add`}>Add Book</NavLink>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="/remove">Remove Book</a>
+                            <NavLink className={({isActive}) =>
+                                isActive ? "nav-link active" : "nav-link"}
+                                     aria-current="page" to={`/remove`}>Remove Book</NavLink>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="/search">Search Book</a>
+                            <NavLink className={({isActive}) =>
+                                isActive ? "nav-link active" : "nav-link"}
+                                     aria-current="page" to={`/search`}>Search Book</NavLink>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
-    )
+    );
 }
+
+Header.propTypes = {
+    headerBrandText: PropTypes.string
+};

@@ -3,5 +3,5 @@ export default function Remove() {
         <>
             <span>Remove</span>
         </>
-    )
+    );
 }

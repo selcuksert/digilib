@@ -3,5 +3,5 @@ export default function Add() {
         <>
             <span>Add</span>
         </>
-    )
+    );
 }
