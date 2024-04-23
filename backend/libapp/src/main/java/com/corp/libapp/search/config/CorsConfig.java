@@ -1,13 +1,12 @@
 package com.corp.libapp.search.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.reactive.config.CorsRegistry;
-import org.springframework.web.reactive.config.EnableWebFlux;
-import org.springframework.web.reactive.config.WebFluxConfigurer;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-@EnableWebFlux
-public class CorsConfig implements WebFluxConfigurer {
+public class CorsConfig {
 
     private final SearchConfig searchConfig;
 
@@ -15,12 +14,17 @@ public class CorsConfig implements WebFluxConfigurer {
         this.searchConfig = searchConfig;
     }
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins(searchConfig.cors().allowedOrigins())
-                .allowedHeaders(searchConfig.cors().allowedHeaders())
-                .allowedMethods(searchConfig.cors().allowedMethods())
-                .maxAge(searchConfig.cors().maxAge());
+    @Bean
+    public WebMvcConfigurer corsMappingConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins(searchConfig.cors().allowedOrigins())
+                        .allowedMethods(searchConfig.cors().allowedMethods())
+                        .allowedHeaders(searchConfig.cors().allowedHeaders())
+                        .maxAge(searchConfig.cors().maxAge());
+            }
+        };
     }
 }

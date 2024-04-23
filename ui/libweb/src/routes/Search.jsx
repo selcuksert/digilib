@@ -37,7 +37,7 @@ export default function Search() {
         setFetching(true);
         setBookLoaded(false);
 
-        fetch(`${import.meta.env.DIGILIB_SEARCH_BASE_URL}/${isbn}`).then(res => res.json())
+        fetch(`${import.meta.env.DIGILIB_BASE_URL}/${isbn}`).then(res => res.json())
             .then(res => Object.keys(res).length > 0 ?
                 res : Promise.reject(new Error(`No book found in database for ISBN: ${isbn}`)))
             .then(res => res[`ISBN:` + isbn])
@@ -86,7 +86,7 @@ export default function Search() {
                     <p>
                         <span>This application uses </span> <a href="https://openlibrary.org/" target="_blank">Open
                         Library</a>
-                        <span> database. Please enter ISBN (International Standard Book Number), of the book
+                        <span> database. Please enter ISBN (International Standard Book Number) of the book
                         you want to search for:</span>
                     </p>
                     <div className="form-check">

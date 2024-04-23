@@ -2,6 +2,15 @@ import PropTypes from "prop-types";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCircleMinus, faCirclePlus} from '@fortawesome/free-solid-svg-icons';
 
+const addBook = (isbn) => {
+    fetch(`${import.meta.env.DIGILIB_BASE_URL}/${isbn}`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'text/plain',
+        }
+    }).then(res => res.text()).then(res => console.log("Added book with ISBN:", res))
+}
+
 export default function BookInfo({
                                      loaded, image, title, subTitle, authors, isbn,
                                      subjects, publishers, publishDate, bookUrl, noOfPages
@@ -14,7 +23,8 @@ export default function BookInfo({
                         <div className="ms-2">
                             <img src={image} className="img-fluid rounded mx-auto d-block" alt="book"></img>
                             <div className="mt-2 mb-2 d-grid gap-3 mx-auto">
-                                <button type="button" className="btn btn-outline-primary btn-sm"><FontAwesomeIcon
+                                <button type="button" className="btn btn-outline-primary btn-sm"
+                                        onClick={() => addBook(isbn)}><FontAwesomeIcon
                                     icon={faCirclePlus}/> Add to library
                                 </button>
                                 <button type="button" className="btn btn-outline-danger btn-sm"><FontAwesomeIcon
