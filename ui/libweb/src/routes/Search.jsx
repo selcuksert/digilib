@@ -36,7 +36,7 @@ export default function Search() {
         setFetching(true);
         setBookLoaded(false);
 
-        fetch(`http://localhost:8080/book/${isbn}`).then(res => res.json())
+        fetch(`${import.meta.env.DIGILIB_SEARCH_BASE_URL}/${isbn}`).then(res => res.json())
             .then(res => Object.keys(res).length > 0 ?
                 res : Promise.reject(new Error(`No book found in database for ISBN: ${isbn}`)))
             .then(res => res[`ISBN:` + isbn])
