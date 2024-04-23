@@ -28,6 +28,7 @@ export default function BookInfo({loaded, image, title, subTitle, authors, isbn,
                                 {
                                     publishers?.map((publisher) =>
                                         <span
+                                            key={publisher}
                                             className="badge rounded-pill text-bg-secondary me-1">{publisher?.name}</span>)
                                 }
                             </li>
@@ -35,7 +36,9 @@ export default function BookInfo({loaded, image, title, subTitle, authors, isbn,
                                 <span style={{fontWeight: "bold"}}>Subjects: </span>
                                 {
                                     subjects?.map((subject) =>
-                                        <span className="badge rounded-pill text-bg-info me-1">{subject?.name}</span>)
+                                        <span
+                                            key={subject.name}
+                                            className="badge rounded-pill text-bg-info me-1">{subject?.name}</span>)
                                 }
                             </li>
                         </ul>
@@ -52,7 +55,7 @@ BookInfo.propTypes = {
     image: PropTypes.string,
     title: PropTypes.string,
     subTitle: PropTypes.string,
-    authors: PropTypes.arrayOf(PropTypes.shape({})),
+    authors: PropTypes.arrayOf(PropTypes.string),
     isbn: PropTypes.string,
     subjects: PropTypes.arrayOf(PropTypes.shape({})),
     publishers: PropTypes.arrayOf(PropTypes.shape({})),
