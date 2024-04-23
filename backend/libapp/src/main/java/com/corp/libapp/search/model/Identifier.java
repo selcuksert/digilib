@@ -1,4 +1,4 @@
-package com.corp.libapp.book.model;
+package com.corp.libapp.search.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

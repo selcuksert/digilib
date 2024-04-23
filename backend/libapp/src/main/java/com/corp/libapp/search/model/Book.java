@@ -1,4 +1,4 @@
-package com.corp.libapp.book.model;
+package com.corp.libapp.search.model;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

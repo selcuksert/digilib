@@ -1,3 +1,3 @@
-package com.corp.libapp.book.model;
+package com.corp.libapp.search.model;
 
 public record UrlName(String url, String name) {}

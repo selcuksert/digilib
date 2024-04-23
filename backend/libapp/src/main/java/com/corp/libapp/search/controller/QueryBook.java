@@ -1,7 +1,7 @@
-package com.corp.libapp.book.controller;
+package com.corp.libapp.search.controller;
 
-import com.corp.libapp.book.model.Book;
-import com.corp.libapp.book.service.QueryBookService;
+import com.corp.libapp.search.model.Book;
+import com.corp.libapp.search.service.QueryBookService;
 import lombok.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

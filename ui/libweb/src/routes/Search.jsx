@@ -21,6 +21,7 @@ export default function Search() {
     const [fetching, setFetching] = useState(false);
     const [error, setError] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
+    const [noOfPages, setNoOfPages] = useState(0);
 
     const search = () => {
         setValid(true);
@@ -36,7 +37,8 @@ export default function Search() {
         setBookLoaded(false);
 
         fetch(`http://localhost:8080/book/${isbn}`).then(res => res.json())
-            .then(res => Object.keys(res).length > 0 ? res : Promise.reject(`No book found in database for ISBN: ${isbn}`))
+            .then(res => Object.keys(res).length > 0 ?
+                res : Promise.reject(new Error(`No book found in database for ISBN: ${isbn}`)))
             .then(res => res[`ISBN:` + isbn])
             .then(res => {
                 setImageSrc(res?.cover?.medium);
@@ -55,15 +57,24 @@ export default function Search() {
                 setPublishDate(res?.publish_date)
                 setIsbnTxt(isbn);
                 setBookUrl(res?.url);
+                setNoOfPages(res?.number_of_pages);
 
                 setBookLoaded(true);
             }).catch((error) => {
             setError(true);
-            setErrorMsg(error);
+            setErrorMsg(error?.message);
         }).finally(() => {
             setIsbn('');
             setFetching(false);
         })
+    }
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            event.stopPropagation();
+            event.preventDefault();
+            search();
+        }
     }
 
     return (
@@ -83,6 +94,7 @@ export default function Search() {
                                    aria-label="ISBN" aria-describedby="search-button"
                                    value={isbn}
                                    onChange={e => setIsbn(e.target.value)}
+                                   onKeyDown={handleKeyDown}
                             />
                             <button className="btn btn-primary" type="button"
                                     id="search-button"
@@ -107,15 +119,14 @@ export default function Search() {
                         {fetching && valid ?
                             <div className="d-flex align-items-center">
                                 <strong>Loading...</strong>
-                                <div className="spinner-border text-secondary ms-auto" role="status"
-                                     aria-hidden="true"></div>
+                                <output className="spinner-border text-secondary ms-auto" aria-hidden="true"></output>
                             </div>
                             :
                             <></>
                         }
                         <BookInfo image={imageSrc} loaded={bookLoaded} title={bookTitle} subTitle={bookSubTitle}
                                   authors={authors} isbn={isbnTxt} subjects={subjects} publishers={publishers}
-                                  publishDate={publishDate} bookUrl={bookUrl}/>
+                                  publishDate={publishDate} bookUrl={bookUrl} noOfPages={noOfPages}/>
                     </div>
                 </div>
             </form>

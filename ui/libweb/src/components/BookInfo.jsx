@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 
-export default function BookInfo({loaded, image, title, subTitle, authors, isbn, subjects, publishers, publishDate, bookUrl}) {
+export default function BookInfo({loaded, image, title, subTitle, authors, isbn,
+                                     subjects, publishers, publishDate, bookUrl, noOfPages}) {
     return (
         loaded ?
             <div className="card mb-3">
@@ -20,6 +21,8 @@ export default function BookInfo({loaded, image, title, subTitle, authors, isbn,
                             <li className="list-group-item"><span style={{fontWeight: "bold"}}>ISBN: </span>{isbn}</li>
                             <li className="list-group-item"><span
                                 style={{fontWeight: "bold"}}>Publish Date: </span>{publishDate}</li>
+                            <li className="list-group-item"><span
+                                style={{fontWeight: "bold"}}>Number of Pages: </span>{noOfPages}</li>
                             <li className="list-group-item">
                                 <span style={{fontWeight: "bold"}}>Publishers: </span>
                                 {
@@ -55,4 +58,5 @@ BookInfo.propTypes = {
     publishers: PropTypes.arrayOf(PropTypes.shape({})),
     publishDate: PropTypes.string,
     bookUrl: PropTypes.string,
+    noOfPages: PropTypes.number,
 };

@@ -24,16 +24,6 @@ export default function Header({headerBrandText}) {
                         <li className="nav-item">
                             <NavLink className={({isActive}) =>
                                 isActive ? "nav-link active" : "nav-link"}
-                                     aria-current="page" to={`/add`}>Add Book</NavLink>
-                        </li>
-                        <li className="nav-item">
-                            <NavLink className={({isActive}) =>
-                                isActive ? "nav-link active" : "nav-link"}
-                                     aria-current="page" to={`/remove`}>Remove Book</NavLink>
-                        </li>
-                        <li className="nav-item">
-                            <NavLink className={({isActive}) =>
-                                isActive ? "nav-link active" : "nav-link"}
                                      aria-current="page" to={`/search`}>Search Book</NavLink>
                         </li>
                     </ul>
