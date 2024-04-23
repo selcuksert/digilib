@@ -1,13 +1,27 @@
 import PropTypes from "prop-types";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faCircleMinus, faCirclePlus} from '@fortawesome/free-solid-svg-icons';
 
-export default function BookInfo({loaded, image, title, subTitle, authors, isbn,
-                                     subjects, publishers, publishDate, bookUrl, noOfPages}) {
+export default function BookInfo({
+                                     loaded, image, title, subTitle, authors, isbn,
+                                     subjects, publishers, publishDate, bookUrl, noOfPages
+                                 }) {
     return (
         loaded ?
             <div className="card mb-3">
                 <div className="row g-0">
                     <div className="col-md-2 mt-2">
-                        <img src={image} className="ms-2 img-fluid rounded-start" alt="book"></img>
+                        <div className="ms-2">
+                            <img src={image} className="img-fluid rounded mx-auto d-block" alt="book"></img>
+                            <div className="mt-2 mb-2 d-grid gap-3 mx-auto">
+                                <button type="button" className="btn btn-outline-primary btn-sm"><FontAwesomeIcon
+                                    icon={faCirclePlus}/> Add to library
+                                </button>
+                                <button type="button" className="btn btn-outline-danger btn-sm"><FontAwesomeIcon
+                                    icon={faCircleMinus}/> Remove from library
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     <div className="col-md-10">
                         <div className="card-body">

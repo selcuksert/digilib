@@ -3,12 +3,13 @@
 import classes from '../styles/Search.module.css';
 import {useState} from "react";
 import BookInfo from "../components/BookInfo.jsx";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faBook, faSearch} from '@fortawesome/free-solid-svg-icons';
 
 export default function Search() {
 
     const [isbn, setIsbn] = useState('');
     const [isbnTxt, setIsbnTxt] = useState('');
-    const [valid, setValid] = useState(true);
     const [imageSrc, setImageSrc] = useState('');
     const [bookLoaded, setBookLoaded] = useState(false);
     const [bookTitle, setBookTitle] = useState('');
@@ -24,11 +25,11 @@ export default function Search() {
     const [noOfPages, setNoOfPages] = useState(0);
 
     const search = () => {
-        setValid(true);
         setError(false);
 
         if (isbn.trim().length === 0) {
-            setValid(false);
+            setError(true);
+            setErrorMsg("Please enter an ISBN!");
             setBookLoaded(false);
             return;
         }
@@ -81,7 +82,7 @@ export default function Search() {
         <div className="container-lg mt-5">
             <form className="row g-3 needs-validation" noValidate>
                 <div className="h-100 p-5 bg-body-tertiary border rounded-3">
-                    <h2>Search Book</h2>
+                    <h2>Search Book <FontAwesomeIcon icon={faBook}/></h2>
                     <p>
                         <span>This application uses </span> <a href="https://openlibrary.org/" target="_blank">Open
                         Library</a>
@@ -99,16 +100,9 @@ export default function Search() {
                             <button className="btn btn-primary" type="button"
                                     id="search-button"
                                     disabled={fetching}
-                                    onClick={search}>Search
+                                    onClick={search}><FontAwesomeIcon icon={faSearch}/> Search
                             </button>
                         </div>
-                        {valid ?
-                            <></>
-                            :
-                            <div className={classes.invalidMessage}>
-                                Please enter an ISBN
-                            </div>
-                        }
                         {error ?
                             <div className={classes.invalidMessage}>
                                 {errorMsg}
@@ -116,7 +110,7 @@ export default function Search() {
                             <></>
 
                         }
-                        {fetching && valid ?
+                        {fetching ?
                             <div className="d-flex align-items-center">
                                 <strong>Loading...</strong>
                                 <output className="spinner-border text-secondary ms-auto" aria-hidden="true"></output>
