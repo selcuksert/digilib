@@ -1,0 +1,39 @@
+version: '3'
+services:
+  neo4j:
+    image: neo4j:5-community
+    environment:
+      - NEO4J_AUTH=none
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+  db:
+    image: postgres:16-alpine
+    restart: always
+    # set shared memory limit when using docker-compose
+    shm_size: 128mb
+    volumes:
+      - postgresql-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: appdb
+      POSTGRES_USER: dbuser
+      POSTGRES_PASSWORD: 1q2w3e4r:!
+    ports:
+      - "5432:5432"
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin4_container
+    ports:
+      - "9080:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin@corp.com
+      PGADMIN_DEFAULT_PASSWORD: Mnbuyt765
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+networks:
+  default:
+
+volumes:
+  postgresql-data:
+  pgadmin-data:
