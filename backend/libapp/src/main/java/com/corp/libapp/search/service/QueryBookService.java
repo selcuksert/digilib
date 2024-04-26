@@ -2,7 +2,6 @@ package com.corp.libapp.search.service;
 
 import com.corp.libapp.search.config.SearchConfig;
 import com.corp.libapp.search.model.Book;
-import lombok.NonNull;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +18,7 @@ public class QueryBookService {
     private final RestTemplate restTemplate;
     private final SearchConfig searchConfig;
 
-    public QueryBookService(@NonNull RestTemplate restTemplate, @NonNull SearchConfig searchConfig) {
+    public QueryBookService(RestTemplate restTemplate, SearchConfig searchConfig) {
         this.restTemplate = restTemplate;
         this.searchConfig = searchConfig;
     }
