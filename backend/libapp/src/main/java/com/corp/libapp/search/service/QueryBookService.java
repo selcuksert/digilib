@@ -38,6 +38,7 @@ public class QueryBookService {
 
         Map<String, Book> modifiedResponse = new HashMap<>();
         assert responseBody != null;
+        // Replace ISBN: prefix in OpenLibrary API response
         responseBody.forEach((isbnToReplace, book) -> modifiedResponse.put(isbnToReplace.replace("ISBN:", ""), book));
 
         return ResponseEntity.status(response.getStatusCode()).headers(response.getHeaders()).body(modifiedResponse);
