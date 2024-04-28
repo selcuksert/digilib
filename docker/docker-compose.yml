@@ -1,0 +1,177 @@
+version: '3'
+services:
+  socket-proxy:
+    image: tecnativa/docker-socket-proxy
+    container_name: socket-proxy
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL",  "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:2375/version" ]
+    environment:
+      CONTAINERS: 1
+      IMAGES: 1
+      AUTH: 1
+      POST: 1
+    privileged: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+  reverse-proxy:
+    # The official v2 Traefik docker image
+    image: traefik:v2.11
+    restart: unless-stopped
+    # Enables the web UI and tells Traefik to listen to docker
+    command:
+      - --api.insecure=true
+      - --providers.docker
+      - --providers.docker.endpoint=tcp://socket-proxy:2375
+      - --providers.docker.exposedbydefault=false
+      - --ping
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --entrypoints.neo4j.address=:7687
+      - --entrypoints.db.address=:5432
+      - --entrypoints.kafka.address=:9092
+    ports:
+      # The HTTP port
+      - "80:80"
+      # The Web UI: http://localhost:8081 (enabled by --api.insecure=true)
+      - "8081:8080"
+      - "7687:7687"
+      - "5432:5432"
+      - "9092:9092"
+    healthcheck:
+      test: [ "CMD", "traefik", "healthcheck", "--ping" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    depends_on:
+      - socket-proxy
+  neo4j:
+    image: neo4j:5-community
+    restart: unless-stopped
+    environment:
+      NEO4J_AUTH: none
+      TZ: 'Europe/Istanbul'
+    healthcheck:
+      test: [ "CMD-SHELL",  "wget", "--no-verbose", "--tries=1", "--spider", "localhost:7474" ]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.neo4j-web.rule=Host(`neo4j.digilib.local`)"
+      - "traefik.http.routers.neo4j-web.entrypoints=web"
+      - "traefik.http.routers.neo4j-web.service=neo4j-web-service"
+      - "traefik.http.services.neo4j-web-service.loadbalancer.server.port=7474"
+      - "traefik.tcp.routers.neo4j.rule=HostSNI(`*`)"
+      - "traefik.tcp.routers.neo4j.entrypoints=neo4j"
+      - "traefik.tcp.routers.neo4j.service=neo4j-service"
+      - "traefik.tcp.services.neo4j-service.loadbalancer.server.port=7687"
+    depends_on:
+      - reverse-proxy
+  db:
+    user: postgres
+    image: postgres:16-alpine
+    restart: unless-stopped
+    # set shared memory limit when using docker-compose
+    shm_size: 128mb
+    volumes:
+      - postgresql-data:/var/lib/postgresql/data
+    environment:
+      PGUSER: dbuser
+      POSTGRES_DB: appdb
+      POSTGRES_USER: dbuser
+      POSTGRES_PASSWORD: 1q2w3e4r:!
+      TZ: 'Europe/Istanbul'
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    labels:
+      - "traefik.enable=true"
+      - "traefik.tcp.routers.db.rule=HostSNI(`*`)"
+      - "traefik.tcp.routers.db.entrypoints=db"
+      - "traefik.tcp.routers.db.service=db-service"
+      - "traefik.tcp.services.db-service.loadbalancer.server.port=5432"
+    depends_on:
+      - reverse-proxy
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    restart: unless-stopped
+    container_name: pgadmin4_container
+    healthcheck:
+      test: [ "CMD-SHELL",  "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/misc/ping" ]
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin@corp.com
+      PGADMIN_DEFAULT_PASSWORD: Mnbuyt765
+      TZ: 'Europe/Istanbul'
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.digilib.local`)"
+      - "traefik.http.routers.pgadmin.entrypoints=web"
+      - "traefik.http.routers.pgadmin.service=pgadmin-service"
+      - "traefik.http.services.pgadmin-service.loadbalancer.server.port=80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    depends_on:
+      - reverse-proxy
+      - db
+  broker:
+    image: confluentinc/confluent-local:latest
+    hostname: broker
+    container_name: broker
+    healthcheck:
+      test: [ "CMD-SHELL", "kafka-topics", "--bootstrap-server", "broker:9092", "--list" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT'
+      KAFKA_LISTENERS: 'PLAINTEXT://broker:29092,CONTROLLER://broker:29093,PLAINTEXT_HOST://0.0.0.0:9092'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://broker:29092,PLAINTEXT_HOST://localhost:9092'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_PROCESS_ROLES: 'broker,controller'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@broker:29093'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_LOG_DIRS: '/var/lib/kafka/data'
+      CLUSTER_ID: 'QjkzODg0QzYxMTUxNEZEMD'
+      TZ: 'Europe/Istanbul'
+    labels:
+      - "traefik.enable=true"
+      - "traefik.tcp.routers.broker.rule=HostSNI(`*`)"
+      - "traefik.tcp.routers.broker.entrypoints=kafka"
+      - "traefik.tcp.routers.broker.service=broker-service"
+      - "traefik.tcp.services.broker-service.loadbalancer.server.port=9092"
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+    depends_on:
+      - reverse-proxy
+  kafdrop:
+    image: obsidiandynamics/kafdrop:latest
+    healthcheck:
+      test: [ "CMD-SHELL", "curl", "-sX", "GET", "http://localhost:9000/broker" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      KAFKA_BROKERCONNECT: broker:29092
+      SERVER_SERVLET_CONTEXTPATH: "/"
+      JVM_OPTS: "-Xms32M -Xmx64M"
+      TZ: 'Europe/Istanbul'
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.kafdrop.rule=Host(`kafdrop.digilib.local`)"
+      - "traefik.http.routers.kafdrop.entrypoints=web"
+      - "traefik.http.routers.kafdrop.service=kafdrop-service"
+      - "traefik.http.services.kafdrop-service.loadbalancer.server.port=9000"
+    depends_on:
+      - broker
+      - reverse-proxy
+networks:
+  default:
+volumes:
+  postgresql-data:
+  pgadmin-data:
+  kafka-data:

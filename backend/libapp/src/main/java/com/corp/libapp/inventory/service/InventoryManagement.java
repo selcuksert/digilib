@@ -5,6 +5,7 @@ import com.corp.libapp.inventory.event.Status;
 import com.corp.libapp.inventory.model.Inventory;
 import com.corp.libapp.inventory.repository.InventoryRepository;
 import com.corp.libapp.search.event.BookAdded;
+import com.corp.libapp.search.event.BookDeleted;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -48,6 +49,19 @@ public class InventoryManagement {
                     LOG.debug("Added book to inventory: {}.", mapper.writeValueAsString(result.get()));
                 }
             }
+        } catch (Exception e) {
+            events.publishEvent(new InventoryUpdated(isbn, Status.ERROR, e.getMessage()));
+        }
+    }
+
+    @ApplicationModuleListener
+    void on(BookDeleted event) {
+        String isbn = "";
+        try {
+            isbn = event.isbn();
+            LOG.debug("Deleting book from inventory with ISBN: {}.", isbn);
+            inventoryRepository.deleteById(isbn);
+            events.publishEvent(new InventoryUpdated(isbn, Status.DELETED, "Success"));
         } catch (Exception e) {
             events.publishEvent(new InventoryUpdated(isbn, Status.ERROR, e.getMessage()));
         }

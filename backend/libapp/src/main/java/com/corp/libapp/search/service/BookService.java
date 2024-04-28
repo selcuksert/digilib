@@ -1,6 +1,7 @@
 package com.corp.libapp.search.service;
 
 import com.corp.libapp.search.event.BookAdded;
+import com.corp.libapp.search.event.BookDeleted;
 import com.corp.libapp.search.model.Book;
 import com.corp.libapp.search.model.UrlName;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +17,8 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class AddBookService {
-    private static final Logger LOG = LoggerFactory.getLogger(AddBookService.class);
+public class BookService {
+    private static final Logger LOG = LoggerFactory.getLogger(BookService.class);
     private final ApplicationEventPublisher events;
     private final QueryBookService queryBookService;
 
@@ -34,6 +35,17 @@ public class AddBookService {
                 BookAdded bookAdded = new BookAdded(isbnResponse, book.title(), book.url(), authorList);
                 events.publishEvent(bookAdded);
             });
+        } catch (Exception e) {
+            LOG.error("Error:", e);
+        }
+    }
+
+    @Transactional
+    public void deleteBook(String isbn) {
+        try {
+            LOG.debug("Deleting Book: {}", isbn);
+            BookDeleted bookDeleted = new BookDeleted(isbn);
+            events.publishEvent(bookDeleted);
         } catch (Exception e) {
             LOG.error("Error:", e);
         }

@@ -31,12 +31,11 @@ export default function BookInfo({
 
     const deleteBook = (isbn) => {
         setFetching(true);
-
-        fetch(`${import.meta.env.DIGILIB_BASE_URL}/inventory/${isbn}`, {
+        fetch(`${import.meta.env.DIGILIB_BASE_URL}/book/${isbn}`, {
             method: 'DELETE'
         })
             .then(res => res.json())
-            .then(res => checkBookAddedToLibrary(res))
+            .then(_ => setExists(false))
             .finally(() => setFetching(false));
     }
 
