@@ -2,6 +2,7 @@ package com.corp.libapp.search.service;
 
 import com.corp.libapp.search.config.SearchConfig;
 import com.corp.libapp.search.model.Book;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -13,15 +14,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class QueryBookService {
 
     private final RestTemplate restTemplate;
     private final SearchConfig searchConfig;
-
-    public QueryBookService(RestTemplate restTemplate, SearchConfig searchConfig) {
-        this.restTemplate = restTemplate;
-        this.searchConfig = searchConfig;
-    }
 
     public ResponseEntity<Map<String, Book>> queryBookWithISBN(String isbn) {
         UriComponents uriComponents = UriComponentsBuilder.newInstance().scheme(searchConfig.url().scheme())

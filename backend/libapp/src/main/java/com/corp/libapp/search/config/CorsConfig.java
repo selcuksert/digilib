@@ -1,18 +1,16 @@
 package com.corp.libapp.search.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
+@RequiredArgsConstructor
 public class CorsConfig {
 
     private final SearchConfig searchConfig;
-
-    public CorsConfig(SearchConfig searchConfig) {
-        this.searchConfig = searchConfig;
-    }
 
     @Bean
     public WebMvcConfigurer corsMappingConfigurer() {

@@ -1,45 +1,28 @@
 package com.corp.libapp.inventory.model;
 
 import com.corp.libapp.inventory.event.Status;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table
+@Data
 public class Inventory {
     @Id
     @Column
     private String isbn;
     @Column
-    private LocalDateTime addedAt;
+    private String title;
+    @Column
+    private String url;
+    @Column
+    @ElementCollection
+    private List<String> authors;
+    @Column
+    private LocalDateTime updatedAt;
     @Column
     private Status status;
-
-    public String getIsbn() {
-        return isbn;
-    }
-
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
-    }
-
-    public LocalDateTime getAddedAt() {
-        return addedAt;
-    }
-
-    public void setAddedAt(LocalDateTime addedAt) {
-        this.addedAt = addedAt;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
 }

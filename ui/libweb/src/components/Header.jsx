@@ -1,4 +1,4 @@
-import classes from '../styles/Header.module.css';
+import classes from '../styles/Header.module.scss';
 import {NavLink} from "react-router-dom";
 import PropTypes from "prop-types";
 
@@ -19,7 +19,7 @@ export default function Header({headerBrandText}) {
                         <li className="nav-item">
                             <NavLink className={({isActive}) =>
                                 isActive ? "nav-link active" : "nav-link"}
-                                     aria-current="page" to={`/`}>My Library</NavLink>
+                                     aria-current="page" to={`/library`}>My Library</NavLink>
                         </li>
                         <li className="nav-item">
                             <NavLink className={({isActive}) =>

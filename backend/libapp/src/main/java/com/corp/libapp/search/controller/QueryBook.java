@@ -2,6 +2,7 @@ package com.corp.libapp.search.controller;
 
 import com.corp.libapp.search.model.Book;
 import com.corp.libapp.search.service.QueryBookService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,12 +14,9 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/book")
+@RequiredArgsConstructor
 public class QueryBook {
     private final QueryBookService queryBookService;
-
-    public QueryBook(QueryBookService queryBookService) {
-        this.queryBookService = queryBookService;
-    }
 
     @GetMapping(value = "/{isbn}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Book>> queryBook(@PathVariable String isbn) {

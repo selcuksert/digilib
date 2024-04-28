@@ -3,7 +3,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCircleMinus, faCirclePlus} from '@fortawesome/free-solid-svg-icons';
 
 const addBook = (isbn) => {
-    fetch(`${import.meta.env.DIGILIB_BASE_URL}/${isbn}`, {
+    fetch(`${import.meta.env.DIGILIB_BASE_URL}/book/${isbn}`, {
         method: 'POST',
         headers: {
             'Accept': 'text/plain',

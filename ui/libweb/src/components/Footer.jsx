@@ -1,4 +1,4 @@
-import classes from '../styles/Footer.module.css';
+import classes from '../styles/Footer.module.scss';
 import moment from "moment";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faGithub} from "@fortawesome/free-brands-svg-icons";

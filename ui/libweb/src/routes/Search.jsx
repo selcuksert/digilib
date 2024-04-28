@@ -1,6 +1,6 @@
 // noinspection JSUnresolvedReference
 
-import classes from '../styles/Search.module.css';
+import classes from '../styles/Search.module.scss';
 import {useState} from "react";
 import BookInfo from "../components/BookInfo.jsx";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
@@ -37,7 +37,7 @@ export default function Search() {
         setFetching(true);
         setBookLoaded(false);
 
-        fetch(`${import.meta.env.DIGILIB_BASE_URL}/${isbn}`).then(res => res.json())
+        fetch(`${import.meta.env.DIGILIB_BASE_URL}/book/${isbn}`).then(res => res.json())
             .then(res => Object.keys(res).length > 0 ?
                 res : Promise.reject(new Error(`No book found in database for ISBN: ${isbn}`)))
             .then(res => res[`ISBN:` + isbn])
@@ -84,8 +84,6 @@ export default function Search() {
                 <div className="h-100 p-5 bg-body-tertiary border rounded-3">
                     <h2>Search Book <FontAwesomeIcon icon={faBook}/></h2>
                     <p>
-                        <span>This application uses </span> <a href="https://openlibrary.org/" target="_blank">Open
-                        Library</a>
                         <span> database. Please enter ISBN (International Standard Book Number) of the book
                         you want to search for:</span>
                     </p>
@@ -108,7 +106,6 @@ export default function Search() {
                                 {errorMsg}
                             </div> :
                             <></>
-
                         }
                         {fetching ?
                             <div className="d-flex align-items-center">
