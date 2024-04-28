@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -32,6 +33,13 @@ public class QueryBookService {
         ParameterizedTypeReference<Map<String, Book>> responseType = new ParameterizedTypeReference<>() {
         };
 
-        return restTemplate.exchange(uriComponents.toUri(), HttpMethod.GET, null, responseType);
+        ResponseEntity<Map<String, Book>> response = restTemplate.exchange(uriComponents.toUri(), HttpMethod.GET, null, responseType);
+        Map<String, Book> responseBody = response.getBody();
+
+        Map<String, Book> modifiedResponse = new HashMap<>();
+        assert responseBody != null;
+        responseBody.forEach((isbnToReplace, book) -> modifiedResponse.put(isbnToReplace.replace("ISBN:", ""), book));
+
+        return ResponseEntity.status(response.getStatusCode()).headers(response.getHeaders()).body(modifiedResponse);
     }
 }

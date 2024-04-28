@@ -24,7 +24,7 @@ public class AddBookService {
     @Transactional
     public void addBook(String isbn) {
         try {
-            LOG.info("Adding Book: {}", isbn);
+            LOG.debug("Adding Book: {}", isbn);
             Map<String, Book> bookQueryResponse = queryBookService.queryBookWithISBN(isbn).getBody();
             assert bookQueryResponse != null;
             bookQueryResponse.forEach((isbnResponse, book) -> {

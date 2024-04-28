@@ -40,7 +40,7 @@ export default function Search() {
         fetch(`${import.meta.env.DIGILIB_BASE_URL}/book/${isbn}`).then(res => res.json())
             .then(res => Object.keys(res).length > 0 ?
                 res : Promise.reject(new Error(`No book found in database for ISBN: ${isbn}`)))
-            .then(res => res[`ISBN:` + isbn])
+            .then(res => res[isbn])
             .then(res => {
                 setImageSrc(res?.cover?.medium);
                 setBookTitle(res?.title);
@@ -84,8 +84,7 @@ export default function Search() {
                 <div className="h-100 p-5 bg-body-tertiary border rounded-3">
                     <h2>Search Book <FontAwesomeIcon icon={faBook}/></h2>
                     <p>
-                        <span> database. Please enter ISBN (International Standard Book Number) of the book
-                        you want to search for:</span>
+                        <span>Please enter ISBN (International Standard Book Number) of the book you want to search for:</span>
                     </p>
                     <div className="form-check">
                         <div className="input-group mb-3">

@@ -20,9 +20,14 @@ public class InventoryController {
         return ResponseEntity.ok().body(inventoryService.getAddedBooks());
     }
 
+    @GetMapping(path = "/exists/{isbn}")
+    public ResponseEntity<Boolean> existsBookByISBN(@PathVariable("isbn") String isbn) {
+        return ResponseEntity.ok().body(inventoryService.existsBookByISBN(isbn));
+    }
+
     @DeleteMapping(path = "/{isbn}")
-    public ResponseEntity<Void> deleteBook(@PathVariable("isbn") String isbn) {
+    public ResponseEntity<String> deleteBook(@PathVariable("isbn") String isbn) {
         inventoryService.deleteBookByISBN(isbn);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(isbn);
     }
 }

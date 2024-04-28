@@ -31,7 +31,7 @@ public class InventoryManagement {
 
         try {
             isbn = event.isbn();
-            LOG.info("Added book to inventory with ISBN: {}.", isbn);
+            LOG.debug("Added book to inventory with ISBN: {}.", isbn);
             var inventory = new Inventory();
             inventory.setIsbn(isbn);
             inventory.setAuthors(event.authors());

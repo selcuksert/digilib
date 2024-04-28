@@ -19,4 +19,8 @@ public class InventoryService {
     public void deleteBookByISBN(String isbn) {
         inventoryRepository.deleteById(isbn);
     }
+
+    public boolean existsBookByISBN(String isbn) {
+        return inventoryRepository.existsById(isbn);
+    }
 }

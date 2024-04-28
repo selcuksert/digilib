@@ -10,7 +10,7 @@ export default function Footer({copyrightText}) {
         <footer className={classes.footer}>
             <div className="container-fluid">
                 <div className="float-start">
-                    <span className="text-secondary fw-light me-2">{`v0.0.1`}
+                    <span className="text-secondary fw-light me-2">{`v${import.meta.env.DIGILIB_APP_VERSION}`}
                     </span>
                     <a href="https://github.com/selcuksert/digilib" target="_blank">
                         <FontAwesomeIcon icon={faGithub}/>

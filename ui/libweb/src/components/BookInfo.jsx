@@ -1,20 +1,59 @@
 import PropTypes from "prop-types";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCircleMinus, faCirclePlus} from '@fortawesome/free-solid-svg-icons';
-
-const addBook = (isbn) => {
-    fetch(`${import.meta.env.DIGILIB_BASE_URL}/book/${isbn}`, {
-        method: 'POST',
-        headers: {
-            'Accept': 'text/plain',
-        }
-    }).then(res => res.text()).then(res => console.log("Added book with ISBN:", res))
-}
+import {useEffect, useState} from "react";
 
 export default function BookInfo({
-                                     loaded, image, title, subTitle, authors, isbn,
-                                     subjects, publishers, publishDate, bookUrl, noOfPages
+                                     loaded,
+                                     image,
+                                     title,
+                                     subTitle,
+                                     authors,
+                                     isbn,
+                                     subjects,
+                                     publishers,
+                                     publishDate,
+                                     bookUrl,
+                                     noOfPages
                                  }) {
+
+    const [exists, setExists] = useState(false);
+    const [fetching, setFetching] = useState(false);
+
+    const addBook = (isbn) => {
+        setFetching(true);
+        fetch(`${import.meta.env.DIGILIB_BASE_URL}/book/${isbn}`, {
+            method: 'POST',
+        })
+            .then(_ => setExists(true))
+            .finally(() => setFetching(false));
+    }
+
+    const deleteBook = (isbn) => {
+        setFetching(true);
+
+        fetch(`${import.meta.env.DIGILIB_BASE_URL}/inventory/${isbn}`, {
+            method: 'DELETE'
+        })
+            .then(res => res.json())
+            .then(res => checkBookAddedToLibrary(res))
+            .finally(() => setFetching(false));
+    }
+
+    const checkBookAddedToLibrary = (isbn) => {
+        if (!loaded) {
+            return;
+        }
+
+        fetch(`${import.meta.env.DIGILIB_BASE_URL}/inventory/exists/${isbn}`)
+            .then(res => res.json())
+            .then(res => setExists(res));
+    }
+
+    useEffect(() => {
+        checkBookAddedToLibrary(isbn);
+    }, [loaded]);
+
     return (
         loaded ?
             <div className="card mb-3">
@@ -23,13 +62,19 @@ export default function BookInfo({
                         <div className="ms-2">
                             <img src={image} className="img-fluid rounded mx-auto d-block" alt="book"></img>
                             <div className="mt-2 mb-2 d-grid gap-3 mx-auto">
-                                <button type="button" className="btn btn-outline-primary btn-sm"
-                                        onClick={() => addBook(isbn)}><FontAwesomeIcon
-                                    icon={faCirclePlus}/> Add to library
-                                </button>
-                                <button type="button" className="btn btn-outline-danger btn-sm"><FontAwesomeIcon
-                                    icon={faCircleMinus}/> Remove from library
-                                </button>
+                                {exists ?
+                                    <button type="button" className="btn btn-outline-danger btn-sm"
+                                            onClick={() => deleteBook(isbn)}
+                                            disabled={fetching}>
+                                        <FontAwesomeIcon
+                                            icon={faCircleMinus}/> Remove from library
+                                    </button> :
+                                    <button type="button" className="btn btn-outline-primary btn-sm"
+                                            onClick={() => addBook(isbn)}
+                                            disabled={fetching}><FontAwesomeIcon
+                                        icon={faCirclePlus}/> Add to library
+                                    </button>
+                                }
                             </div>
                         </div>
                     </div>
@@ -42,7 +87,9 @@ export default function BookInfo({
                             </p>
                         </div>
                         <ul className="list-group list-group-flush">
-                            <li className="list-group-item"><span style={{fontWeight: "bold"}}>ISBN: </span>{isbn}</li>
+                            <li className="list-group-item"><span
+                                style={{fontWeight: "bold"}}>ISBN: </span>{isbn}
+                            </li>
                             <li className="list-group-item"><span
                                 style={{fontWeight: "bold"}}>Publish Date: </span>{publishDate}</li>
                             <li className="list-group-item"><span
@@ -71,7 +118,8 @@ export default function BookInfo({
             </div>
             :
             <></>
-    );
+
+    )
 }
 
 BookInfo.propTypes = {
