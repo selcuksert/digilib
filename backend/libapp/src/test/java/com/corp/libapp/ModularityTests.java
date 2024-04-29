@@ -1,6 +1,5 @@
-package com.corp.digilib;
+package com.corp.libapp;
 
-import com.corp.libapp.DigilibApplication;
 import org.junit.jupiter.api.Test;
 import org.springframework.modulith.core.ApplicationModules;
 import org.springframework.modulith.docs.Documenter;
