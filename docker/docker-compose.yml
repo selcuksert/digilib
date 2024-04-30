@@ -178,6 +178,25 @@ services:
     depends_on:
       - broker
       - reverse-proxy
+  zipkin:
+    image: ghcr.io/openzipkin/zipkin-slim:latest
+    container_name: zipkin
+    healthcheck:
+      test: [ "CMD-SHELL",  "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:9411/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      STORAGE_TYPE: mem
+      TZ: 'Europe/Istanbul'
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.zipkin.rule=Host(`zipkin.digilib.local`)"
+      - "traefik.http.routers.zipkin.entrypoints=web"
+      - "traefik.http.routers.zipkin.service=zipkin-service"
+      - "traefik.http.services.zipkin-service.loadbalancer.server.port=9411"
+    depends_on:
+      - reverse-proxy
 networks:
   default:
 volumes:
