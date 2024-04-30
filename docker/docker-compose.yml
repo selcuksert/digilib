@@ -6,6 +6,9 @@ services:
     restart: unless-stopped
     healthcheck:
       test: [ "CMD-SHELL",  "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:2375/version" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     environment:
       CONTAINERS: 1
       IMAGES: 1
@@ -53,6 +56,9 @@ services:
       TZ: 'Europe/Istanbul'
     healthcheck:
       test: [ "CMD-SHELL",  "wget", "--no-verbose", "--tries=1", "--spider", "localhost:7474" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.neo4j-web.rule=Host(`neo4j.digilib.local`)"
@@ -98,6 +104,9 @@ services:
     container_name: pgadmin4_container
     healthcheck:
       test: [ "CMD-SHELL",  "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/misc/ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     environment:
       PGADMIN_DEFAULT_EMAIL: pgadmin@corp.com
       PGADMIN_DEFAULT_PASSWORD: Mnbuyt765
