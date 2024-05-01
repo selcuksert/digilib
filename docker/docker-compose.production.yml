@@ -13,7 +13,7 @@ services:
       retries: 5
     environment:
       PSQL_HOST: db
-      KAFKA_SERVERS: broker:9092
+      KAFKA_SERVERS: broker:29092
       NEO4J_HOST: neo4j
       ZIPKIN_HOST: zipkin:9411
       TZ: Europe/Istanbul

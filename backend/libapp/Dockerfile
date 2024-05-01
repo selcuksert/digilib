@@ -15,6 +15,8 @@ FROM eclipse-temurin:21-alpine AS runner
 VOLUME /tmp
 ARG DEPENDENCY=/workspace/app/target/dependency
 
+ENV MAIN_CLASS="com.corp.libapp.DigilibApplication"
+
 RUN addgroup --system --gid 1001 appgrp
 RUN adduser --system --uid 1001 appuser -G appgrp
 RUN apk --no-cache add curl jq
@@ -25,4 +27,4 @@ COPY --from=build --chown=appuser:appgrp ${DEPENDENCY}/BOOT-INF/classes /app
 
 USER appuser
 
-ENTRYPOINT ["java","-cp","/app:/app/lib/*","com.corp.libapp.DigilibApplication"]
+ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -cp /app:/app/lib/* ${MAIN_CLASS}"]
