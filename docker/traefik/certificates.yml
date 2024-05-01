@@ -1,0 +1,11 @@
+tls:
+  certificates:
+    - certFile: "/usr/share/certificates/digilib.crt"
+      keyFile: "/usr/share/certificates/digilib.key"
+      stores:
+        - default
+  stores:
+    default:
+      defaultCertificate:
+        certFile: "/usr/share/certificates/digilib.crt"
+        keyFile: "/usr/share/certificates/digilib.key"

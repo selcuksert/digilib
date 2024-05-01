@@ -21,13 +21,22 @@ services:
     # The official v2 Traefik docker image
     image: traefik:v2.11
     restart: unless-stopped
+    volumes:
+      - ./certificates:/usr/share/certificates
+      - ./traefik:/usr/share/configuration
     # Enables the web UI and tells Traefik to listen to docker
     command:
       - --api.insecure=true
+      - --api.dashboard=true
       - --providers.docker
       - --providers.docker.endpoint=tcp://socket-proxy:2375
       - --providers.docker.exposedbydefault=false
+      - --providers.file.directory=/usr/share/configuration/
+      - --providers.file.watch=true
       - --ping
+      - --entrypoints.web.http.redirections.entryPoint.to=websecure
+      - --entrypoints.web.http.redirections.entryPoint.scheme=https
+      - --entrypoints.web.http.redirections.entrypoint.permanent=true
       - --entrypoints.web.address=:80
       - --entrypoints.websecure.address=:443
       - --entrypoints.neo4j.address=:7687
@@ -36,6 +45,8 @@ services:
     ports:
       # The HTTP port
       - "80:80"
+      # The HTTPS port
+      - "443:443"
       # The Web UI: http://localhost:8081 (enabled by --api.insecure=true)
       - "8081:8080"
       - "7687:7687"
@@ -50,6 +61,7 @@ services:
       - socket-proxy
   neo4j:
     image: neo4j:5-community
+    user: "${UID}:${GID}"
     restart: unless-stopped
     environment:
       NEO4J_AUTH: none
@@ -62,9 +74,15 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.neo4j-web.rule=Host(`neo4j.digilib.local`)"
-      - "traefik.http.routers.neo4j-web.entrypoints=web"
+      - "traefik.http.routers.neo4j-web.entrypoints=websecure"
+      - "traefik.http.routers.neo4j-web.tls=true"
       - "traefik.http.routers.neo4j-web.service=neo4j-web-service"
       - "traefik.http.services.neo4j-web-service.loadbalancer.server.port=7474"
+      - "traefik.http.routers.neo4j-wss.rule=Host(`neo4j.digilib.local`)"
+      - "traefik.http.routers.neo4j-wss.entrypoints=neo4j"
+      - "traefik.http.routers.neo4j-wss.tls=true"
+      - "traefik.http.routers.neo4j-wss.service=neo4j-wss-service"
+      - "traefik.http.services.neo4j-wss-service.loadbalancer.server.port=7687"
       - "traefik.tcp.routers.neo4j.rule=HostSNI(`*`)"
       - "traefik.tcp.routers.neo4j.entrypoints=neo4j"
       - "traefik.tcp.routers.neo4j.service=neo4j-service"
@@ -114,7 +132,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.digilib.local`)"
-      - "traefik.http.routers.pgadmin.entrypoints=web"
+      - "traefik.http.routers.pgadmin.entrypoints=websecure"
+      - "traefik.http.routers.pgadmin.tls=true"
       - "traefik.http.routers.pgadmin.service=pgadmin-service"
       - "traefik.http.services.pgadmin-service.loadbalancer.server.port=80"
     volumes:
@@ -172,7 +191,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.kafdrop.rule=Host(`kafdrop.digilib.local`)"
-      - "traefik.http.routers.kafdrop.entrypoints=web"
+      - "traefik.http.routers.kafdrop.entrypoints=websecure"
+      - "traefik.http.routers.kafdrop.tls=true"
       - "traefik.http.routers.kafdrop.service=kafdrop-service"
       - "traefik.http.services.kafdrop-service.loadbalancer.server.port=9000"
     depends_on:
@@ -192,7 +212,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.zipkin.rule=Host(`zipkin.digilib.local`)"
-      - "traefik.http.routers.zipkin.entrypoints=web"
+      - "traefik.http.routers.zipkin.entrypoints=websecure"
+      - "traefik.http.routers.zipkin.tls=true"
       - "traefik.http.routers.zipkin.service=zipkin-service"
       - "traefik.http.services.zipkin-service.loadbalancer.server.port=9411"
     depends_on:
