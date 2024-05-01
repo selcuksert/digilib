@@ -25,4 +25,4 @@ COPY --from=build --chown=appuser:appgrp ${DEPENDENCY}/BOOT-INF/classes /app
 
 USER appuser
 
-ENTRYPOINT ["java","-cp","app:app/lib/*","com.corp.libapp.DigilibApplication"]
+ENTRYPOINT ["java","-cp","/app:/app/lib/*","com.corp.libapp.DigilibApplication"]
