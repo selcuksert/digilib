@@ -1,10 +1,7 @@
-// noinspection JSUnresolvedReference
-
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faInfoCircle} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faInfoCircle} from "@fortawesome/free-solid-svg-icons";
 
 export default function Banner() {
-
     return (
         <div className="container-fluid mt-3">
             <div className="card border-info-subtle">
@@ -18,4 +15,3 @@ export default function Banner() {
         </div>
     );
 }
-

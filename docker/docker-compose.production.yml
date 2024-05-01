@@ -1,0 +1,60 @@
+version: '3'
+services:
+  libapp:
+    build:
+      context: ../backend/libapp
+      dockerfile: Dockerfile
+    container_name: libapp
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL",  "curl -sX GET http://localhost:8080/actuator/health | jq -r .status | grep -w 'UP'" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      PSQL_HOST: db
+      KAFKA_SERVERS: broker:9092
+      NEO4J_HOST: neo4j
+      ZIPKIN_HOST: zipkin:9411
+      TZ: Europe/Istanbul
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.libapp.rule=Host(`api.digilib.local`)"
+      - "traefik.http.routers.libapp.entrypoints=web"
+      - "traefik.http.routers.libapp.service=libapp-service"
+      - "traefik.http.middlewares.cors.headers.accesscontrolallowmethods=*"
+      - "traefik.http.middlewares.cors.headers.accesscontrolallowheaders=*"
+      - "traefik.http.middlewares.cors.headers.accesscontrolalloworiginlist=http://ui.digilib.local"
+      - "traefik.http.middlewares.cors.headers.accesscontrolmaxage=100"
+      - "traefik.http.routers.libapp.middlewares=cors"
+      - "traefik.http.services.libapp-service.loadbalancer.server.port=8080"
+    depends_on:
+      - reverse-proxy
+      - broker
+      - neo4j
+      - db
+  ui:
+    build:
+      context: ../ui/libweb
+      dockerfile: Dockerfile
+    container_name: ui
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL",  "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:3000" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      NGINX_PORT: 3000
+      TZ: Europe/Istanbul
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ui.rule=Host(`ui.digilib.local`)"
+      - "traefik.http.routers.ui.entrypoints=web"
+      - "traefik.http.routers.ui.service=ui-service"
+      - "traefik.http.services.ui-service.loadbalancer.server.port=3000"
+    depends_on:
+      - reverse-proxy
+      - libapp
+networks:
+  default:

@@ -22,7 +22,7 @@ export default function BookInfo({
 
     const addBook = (isbn) => {
         setFetching(true);
-        fetch(`${import.meta.env.DIGILIB_BASE_URL}/book/${isbn}`, {
+        fetch(`${import.meta.env.DIGILIB_API_URL}/book/${isbn}`, {
             method: 'POST',
         })
             .then(_ => setExists(true))
@@ -31,7 +31,7 @@ export default function BookInfo({
 
     const deleteBook = (isbn) => {
         setFetching(true);
-        fetch(`${import.meta.env.DIGILIB_BASE_URL}/book/${isbn}`, {
+        fetch(`${import.meta.env.DIGILIB_API_URL}/book/${isbn}`, {
             method: 'DELETE'
         })
             .then(res => res.json())
@@ -44,7 +44,7 @@ export default function BookInfo({
             return;
         }
 
-        fetch(`${import.meta.env.DIGILIB_BASE_URL}/inventory/exists/${isbn}`)
+        fetch(`${import.meta.env.DIGILIB_API_URL}/inventory/exists/${isbn}`)
             .then(res => res.json())
             .then(res => setExists(res));
     }

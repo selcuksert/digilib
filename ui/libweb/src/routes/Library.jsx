@@ -19,7 +19,7 @@ export default function Library() {
     const getAddedBooks = () => {
         setBooks([]);
         setFetching(true);
-        fetch(`${import.meta.env.DIGILIB_BASE_URL}/inventory/added`).then(res => res.json())
+        fetch(`${import.meta.env.DIGILIB_API_URL}/inventory/added`).then(res => res.json())
             .then(res => Object.keys(res).length > 0 ?
                 res : Promise.reject(new Error(`No book found in library!`)))
             .then((res) => {
@@ -35,7 +35,7 @@ export default function Library() {
     const deleteBook = (isbn) => {
         setBooks([]);
         setFetching(true);
-        fetch(`${import.meta.env.DIGILIB_BASE_URL}/inventory/${isbn}`, {
+        fetch(`${import.meta.env.DIGILIB_API_URL}/inventory/${isbn}`, {
             method: 'DELETE'
         }).then(_ => {
             getAddedBooks();
