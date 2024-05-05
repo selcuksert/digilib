@@ -3,3 +3,4 @@ target/
 /node_modules/.yarn-integrity
 docker/data/
 certificates/
+*.bkp
