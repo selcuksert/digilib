@@ -67,6 +67,7 @@ For local deployments a typical `hosts` file content for digilib would be:
 
 [source,text]
 ----
+127.0.0.1 portainer.digilib.local
 127.0.0.1 neo4j.digilib.local
 127.0.0.1 pgadmin.digilib.local
 127.0.0.1 ui.digilib.local
@@ -78,6 +79,10 @@ For local deployments a typical `hosts` file content for digilib would be:
 
 |===
 |URL |Mode |Detail
+
+|https://portainer.digilib.local
+|Production
+|Portainer UI
 
 |https://neo4j.digilib.local
 |All modes
