@@ -1,6 +1,6 @@
 = Digital Library
 
-This project implements a basic digital library with searching books via ISBN and inventory management (add/delete book) functions using https://spring.io/projects/spring-modulith[Spring Modulith, window=_blank] and ReactJS. This application uses https://openlibrary.org/[Open Library, window=_blank] as book info database.
+This project implements a basic digital library with searching books via ISBN and inventory management (add/delete book) functions using https://spring.io/projects/spring-modulith[Spring Modulith^] and ReactJS. This application uses https://openlibrary.org/[Open Library^] as book info database.
 
 == Architecture
 
