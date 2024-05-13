@@ -44,6 +44,7 @@ fi
 
 SCRIPT_DIR="${0:a:h}"
 CERT_DIR=${SCRIPT_DIR}/certificates
+CLUSTER_ID=$(uuidgen | tr -d '-' | base64 | cut -b 1-22)
 
 if [[ $MODE != "uninstall" ]]; then
   [ ! -d "${CERT_DIR}" ] && mkdir "${CERT_DIR}"
@@ -60,14 +61,14 @@ fi
 
 if [[ $MODE == "development" ]]; then
   echo "Running in $MODE mode"
-  UID=${UID} GID=${GID} docker-compose -f "${SCRIPT_DIR}"/docker-compose.yml down --remove-orphans
-  UID=${UID} GID=${GID} docker-compose -f "${SCRIPT_DIR}"/docker-compose.yml up -d --build
+  UID=${UID} GID=${GID} KAFKA_CLUSTER_ID=${CLUSTER_ID} docker-compose -f "${SCRIPT_DIR}"/docker-compose.yml down --remove-orphans
+  UID=${UID} GID=${GID} KAFKA_CLUSTER_ID=${CLUSTER_ID} docker-compose -f "${SCRIPT_DIR}"/docker-compose.yml up -d --build
 elif [[ $MODE == "production" ]]; then
   echo "Running in $MODE mode"
-  UID=${UID} GID=${GID} docker-compose -f "${SCRIPT_DIR}"/docker-compose.yml -f "${SCRIPT_DIR}"/docker-compose.production.yml down --remove-orphans
-  UID=${UID} GID=${GID} docker-compose -f "${SCRIPT_DIR}"/docker-compose.yml -f "${SCRIPT_DIR}"/docker-compose.production.yml up -d --build
+  UID=${UID} GID=${GID} KAFKA_CLUSTER_ID=${CLUSTER_ID} docker-compose -f "${SCRIPT_DIR}"/docker-compose.yml -f "${SCRIPT_DIR}"/docker-compose.production.yml down --remove-orphans
+  UID=${UID} GID=${GID} KAFKA_CLUSTER_ID=${CLUSTER_ID} docker-compose -f "${SCRIPT_DIR}"/docker-compose.yml -f "${SCRIPT_DIR}"/docker-compose.production.yml up -d --build
 elif [[ $MODE == "uninstall" ]]; then
   echo "Running in $MODE mode"
   sudo keytool -delete -cacerts -alias digilib
-  UID=${UID} GID=${GID} docker-compose -f "${SCRIPT_DIR}"/docker-compose.yml -f "${SCRIPT_DIR}"/docker-compose.production.yml down --remove-orphans --rmi all -v
+  UID=${UID} GID=${GID} KAFKA_CLUSTER_ID=${CLUSTER_ID} docker-compose -f "${SCRIPT_DIR}"/docker-compose.yml -f "${SCRIPT_DIR}"/docker-compose.production.yml down --remove-orphans --rmi all -v
 fi

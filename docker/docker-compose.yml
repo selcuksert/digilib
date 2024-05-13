@@ -98,10 +98,10 @@ services:
     volumes:
       - postgresql-data:/var/lib/postgresql/data
     environment:
-      PGUSER: dbuser
-      POSTGRES_DB: appdb
-      POSTGRES_USER: dbuser
-      POSTGRES_PASSWORD: 1q2w3e4r:!
+      PGUSER: ${PGUSER}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       TZ: 'Europe/Istanbul'
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
@@ -126,8 +126,8 @@ services:
       timeout: 5s
       retries: 5
     environment:
-      PGADMIN_DEFAULT_EMAIL: pgadmin@corp.com
-      PGADMIN_DEFAULT_PASSWORD: Mnbuyt765
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
       TZ: 'Europe/Istanbul'
     labels:
       - "traefik.enable=true"
@@ -164,7 +164,7 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
       KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
       KAFKA_LOG_DIRS: '/var/lib/kafka/data'
-      CLUSTER_ID: 'QjkzODg0QzYxMTUxNEZEMD'
+      CLUSTER_ID: ${KAFKA_CLUSTER_ID}
       TZ: 'Europe/Istanbul'
     labels:
       - "traefik.enable=true"

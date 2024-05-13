@@ -1,12 +1,13 @@
 = Digital Library
 
-This project implements a basic digital library with searching books via ISBN and inventory management (add/delete book) functions using https://spring.io/projects/spring-modulith[Spring Modulith^] and ReactJS. This application uses https://openlibrary.org/[Open Library^] as book info database.
+This project implements a basic digital library with searching books via ISBN and inventory management (add/delete book) functions using link:https://spring.io/projects/spring-modulith[Spring Modulith,window=_blank] and ReactJS.
+This application uses link:https://openlibrary.org/[Open Library,window=_blank] as book info database. The project supports Java SDK 21.
 
 == Architecture
 
 The project is compatible with docker and comprises of modules and services that underpins a typical Spring Modulith based application:
 
-image:./docs/models/arch.png[img]
+image:docs/models/arch.png[img]
 
 === Traefik
 
@@ -14,7 +15,8 @@ Serves as edge router for docker-compose setup.
 
 === Neo4J
 
-Serves as event registry for digilib modulith. It includes *Neo4J browser* for data browsing on graph DB.
+Serves as event registry for digilib modulith.
+It includes *Neo4J browser* for data browsing on graph DB.
 
 === Kafka
 
@@ -32,10 +34,10 @@ Is used to capture and view micrometer spans originated by digilib modulith for 
 
 The project comes with two different modes based on docker-compose:
 
-* One for link:./docker/docker-compose.yml[development] to activate mandatory external services for development with opening required ports for IDE,
-* The other one for link:./docker/docker-compose.yml[production] complementing previous one with serving full-stack application inside docker-compose setup.
+* One for link:docker/docker-compose.yml[development] to activate mandatory external services for development with opening required ports for IDE,
+* The other one for link:docker/docker-compose.yml[production] complementing previous one with serving full-stack application inside docker-compose setup.
 
-The link:./docker/start.sh[start script] (based on `zsh`) has the following options:
+The link:docker/start.sh[start script] (based on `zsh`) has the following options:
 
 [source,shell]
 ----
@@ -55,3 +57,21 @@ u     Uninstall setup.
 ----
 
 The start script also generates and registers a self-signed certificate to enable TLS on Traefik edge router.
+
+See link:docker/.env[environment file] for credentials and parameters used in docker-compose setup.
+
+=== URLs
+
+Some DNS entries should be added with IP of node that hosts Traefik deployment.
+For local deployments a typical `hosts` file content for digilib would be:
+
+[source,text]
+----
+127.0.0.1 neo4j.digilib.local
+127.0.0.1 pgadmin.digilib.local
+127.0.0.1 ui.digilib.local
+127.0.0.1 api.digilib.local
+127.0.0.1 kafdrop.digilib.local
+127.0.0.1 zipkin.digilib.local
+127.0.0.1 api.digilib.local
+----
