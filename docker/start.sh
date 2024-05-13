@@ -60,8 +60,8 @@ fi
 
 if [[ $MODE == "development" ]]; then
   echo "Running in $MODE mode"
-  UID=${UID} GID=${GID} docker-compose -f "${SCRIPT_DIR}"/docker-compose.yml -f "${SCRIPT_DIR}"/docker-compose.production.yml down --remove-orphans
-  UID=${UID} GID=${GID} docker-compose -f "${SCRIPT_DIR}"/docker-compose.yml -f "${SCRIPT_DIR}"/docker-compose.production.yml up -d --build
+  UID=${UID} GID=${GID} docker-compose -f "${SCRIPT_DIR}"/docker-compose.yml down --remove-orphans
+  UID=${UID} GID=${GID} docker-compose -f "${SCRIPT_DIR}"/docker-compose.yml up -d --build
 elif [[ $MODE == "production" ]]; then
   echo "Running in $MODE mode"
   UID=${UID} GID=${GID} docker-compose -f "${SCRIPT_DIR}"/docker-compose.yml -f "${SCRIPT_DIR}"/docker-compose.production.yml down --remove-orphans
