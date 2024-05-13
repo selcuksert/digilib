@@ -31,6 +31,7 @@ Is used to capture and view micrometer spans originated by digilib modulith for 
 == Start-up Modes
 
 The project comes with two different modes based on docker-compose:
+
 * One for link:./docker/docker-compose.yml[development] to activate mandatory external services for development with opening required ports for IDE,
 * The other one for link:./docker/docker-compose.yml[production] complementing previous one with serving full-stack application inside docker-compose setup.
 
