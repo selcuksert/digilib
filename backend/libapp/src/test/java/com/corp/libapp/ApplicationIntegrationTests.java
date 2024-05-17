@@ -5,6 +5,7 @@ import com.corp.libapp.inventory.event.Status;
 import com.corp.libapp.inventory.service.InventoryService;
 import com.corp.libapp.search.service.BookService;
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.neo4j.cypherdsl.core.renderer.Configuration;
 import org.neo4j.cypherdsl.core.renderer.Dialect;
@@ -41,6 +42,7 @@ class ApplicationIntegrationTests {
     private final InventoryService inventoryService;
 
     @Test
+    @Order(1)
     void publishesBookAddition(Scenario scenario) {
         scenario.stimulate(() -> bookService.addBook(ISBN))
                 .andWaitForStateChange(registry::findIncompletePublications, Collection::isEmpty)
@@ -51,6 +53,7 @@ class ApplicationIntegrationTests {
     }
 
     @Test
+    @Order(2)
     void publishesBookDeletion(Scenario scenario) {
         scenario.stimulate(() -> bookService.deleteBook(ISBN))
                 .andWaitForStateChange(registry::findIncompletePublications, Collection::isEmpty)
