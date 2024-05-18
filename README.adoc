@@ -3,6 +3,9 @@
 This project implements a basic digital library with searching books via ISBN and inventory management (add/delete book) functions using link:https://spring.io/projects/spring-modulith[Spring Modulith,window=_blank] and ReactJS.
 This application uses link:https://openlibrary.org/[Open Library,window=_blank] as book info database. The project supports Java SDK 21.
 
+See Medium article: https://medium.com/@selcuk.sert/modular-monoliths-with-spring-modulith-96361f3167c9[Modular Monoliths with Spring Modulith
+]
+
 [cols="a,a"]
 |===
 | image:docs/images/ui-1.png[ui-1]
