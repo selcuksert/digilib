@@ -32,7 +32,6 @@ public class InventoryManagement {
 
         try {
             isbn = event.isbn();
-            LOG.debug("Added book to inventory with ISBN: {}.", isbn);
             var inventory = new Inventory();
             inventory.setIsbn(isbn);
             inventory.setAuthors(event.authors());
@@ -44,6 +43,7 @@ public class InventoryManagement {
             events.publishEvent(new InventoryUpdated(isbn, Status.ADDED, "Success"));
 
             if (LOG.isDebugEnabled()) {
+                LOG.debug("Added book to inventory with ISBN: {}.", isbn);
                 Optional<Inventory> result = inventoryRepository.findById(isbn);
                 if (result.isPresent()) {
                     LOG.debug("Added book to inventory: {}.", mapper.writeValueAsString(result.get()));
